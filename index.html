@@ -417,39 +417,34 @@
         <p class="text-lg font-light text-gray-400 leading-relaxed">Get full access, hands-on setup, and direct input into the product.</p>
       </div>
 
-      <iframe name="hidden-iframe" style="display:none"></iframe>
-
       <form id="waitlist-form"
-            action="https://docs.google.com/forms/d/e/1FAIpQLSfLbsCBSW4ttwO8QY0bGhr6zbGEhN2wwuwr51KdgbTNyuQbKg/formResponse"
-            method="POST"
-            target="hidden-iframe"
             onsubmit="handleSubmit(event)"
             class="bg-white rounded-3xl p-8 space-y-5 shadow-xl border border-purple-100"
             style="box-shadow:0 20px 60px rgba(124,58,237,.1);">
 
         <div>
           <label class="block text-[12px] font-semibold text-gray-500 uppercase tracking-wide mb-2">Your name</label>
-          <input type="text" name="entry.1577374266" placeholder="Dr. Priya Sharma" required class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
+          <input type="text" name="name" placeholder="Dr. Priya Sharma" required class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
         </div>
 
         <div>
           <label class="block text-[12px] font-semibold text-gray-500 uppercase tracking-wide mb-2">Email</label>
-          <input type="email" name="entry.5785226" placeholder="you@clinic.com" required class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
+          <input type="email" name="email" placeholder="you@clinic.com" required class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
         </div>
 
         <div>
           <label class="block text-[12px] font-semibold text-gray-500 uppercase tracking-wide mb-2">Phone number</label>
-          <input type="tel" name="entry.1330727390" placeholder="+91 98765 43210" class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
+          <input type="tel" name="phone" placeholder="+91 98765 43210" class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
         </div>
 
         <div>
           <label class="block text-[12px] font-semibold text-gray-500 uppercase tracking-wide mb-2">Clinic name & city</label>
-          <input type="text" name="entry.560672603" placeholder="Little Stars Clinic, Bengaluru" required class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
+          <input type="text" name="clinic" placeholder="Little Stars Clinic, Bengaluru" required class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px]"/>
         </div>
 
         <div>
           <label class="block text-[12px] font-semibold text-gray-500 uppercase tracking-wide mb-2">Specialty</label>
-          <select name="entry.609484886" class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px] appearance-none">
+          <select name="specialty" class="input-field w-full rounded-2xl px-4 py-3.5 text-[15px] appearance-none">
             <option value="">Select your specialty</option>
             <option>Paediatrics</option>
             <option>General Medicine</option>
@@ -541,14 +536,25 @@
   </footer>
 
   <script>
-    function handleSubmit(e) {
+    const SCRIPT_URL = 'https://script.google.com/a/macros/mangomd.in/s/AKfycbzNfwz-hSXhNcipB8pxwYBnLMi8gSQo99dJfkU7IqhqKvzvn0YHMGyP-pzzKwnznyR59g/exec';
+
+    async function handleSubmit(e) {
+      e.preventDefault();
       const form = e.target;
-      // Form submits to hidden-iframe (no page redirect, no CORS issue)
-      // Show success message immediately
-      setTimeout(function() {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      const data = new FormData(form);
+      try {
+        await fetch(SCRIPT_URL, { method: 'POST', body: data, mode: 'no-cors' });
         form.style.display = 'none';
         document.getElementById('success-msg').classList.remove('hidden');
-      }, 500);
+      } catch {
+        btn.textContent = 'Request Early Access';
+        btn.disabled = false;
+        alert('Something went wrong. Please email us at aditi@mangomd.in');
+      }
     }
   </script>
 
